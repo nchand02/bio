@@ -670,6 +670,67 @@ body.dark-mode .navbar {
     color: var(--text-secondary);
 }
 
+/* AI Certifications Section */
+.ai-certifications-section {
+    margin-top: 2rem;
+}
+
+.encora-badge-container {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(14, 165, 233, 0.05));
+    border-radius: 16px;
+    border: 2px solid var(--border-color);
+}
+
+.encora-badge {
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+}
+
+.encora-badge:hover {
+    transform: scale(1.05);
+}
+
+.badge-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin: 0;
+}
+
+.certification-card.ai-cert {
+    border-left-color: #10b981;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.03), rgba(5, 150, 105, 0.03));
+}
+
+.certification-card.ai-cert:hover {
+    border-left-color: #059669;
+}
+
+.cert-link {
+    display: inline-block;
+    margin-top: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.cert-link:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
 /* ===================================
    AWARDS SECTION
    =================================== */
