@@ -52,7 +52,7 @@ After deployment, visit: **https://nchand02.github.io/bio/**
 Your website includes:
 
 1. **Hero Section** - Animated introduction with gradient background
-2. **About** - Professional summary with statistics (20+ years, 55+ team members, 8+ projects, 7 awards)
+2. **About** - Professional summary with statistics (20+ years, 85+ team members, 8+ projects, 7 awards)
 3. **Skills** - Categorized by:
    - Frameworks & Libraries
    - Programming Languages
