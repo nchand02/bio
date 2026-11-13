@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bengaluru Namma Metro — Current &amp; Future Network Map (Nov 2026)</title>
+<meta name="description" content="Interactive map of Bengaluru Namma Metro: operational, under-construction, approved and proposed lines with colour coding, station details and a 2011–2032 timeline. Status as of 13 Nov 2026.">
+<meta name="author" content="Navdeep Singh Chander">
+<link rel="canonical" href="https://nchand02.github.io/bio/bengaluru-metro/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bengaluru Namma Metro — Current &amp; Future Network Map">
+<meta property="og:description" content="Every line, every status, every target date — Purple, Green, Yellow, Pink, Blue, Orange, Grey, Red and Phase 4 proposals on one interactive map, with a 2011–2032 timeline.">
+<meta property="og:url" content="https://nchand02.github.io/bio/bengaluru-metro/">
+<meta property="og:image" content="https://nchand02.github.io/bio/bengaluru-metro/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚇</text></svg>">
+<style>
+:root{--bg:#f6f5f2;--card:#fff;--ink:#1d2329;--muted:#5f6b76;--line:#e3e1dc}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-text-size-adjust:100%}
+header{padding:16px 14px 8px;max-width:1100px;margin:0 auto}
+h1{font-size:20px;margin:0 0 4px;line-height:1.25}
+h2{font-size:16px;margin:0 0 10px}
+.sub{color:var(--muted);font-size:13px;line-height:1.45}
+main{max-width:1100px;margin:0 auto;padding:0 10px 40px}
+.mapwrap{position:relative;height:min(68vh,660px);min-height:380px;background:#fbfaf7;border:1px solid var(--line);border-radius:14px;overflow:hidden;touch-action:none}
+svg#map{width:100%;height:100%;display:block;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none}
+svg#map:active{cursor:grabbing}
+.zoom{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:6px;z-index:3}
+.zoom button{min-width:40px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:14px;font-weight:600;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08);cursor:pointer;padding:0 8px}
+.badge{position:absolute;left:8px;top:8px;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:10px;padding:6px 9px;font-size:12px;line-height:1.35;z-index:3;max-width:62%;pointer-events:none}
+.badge b{font-size:13px}
+.hint{position:absolute;left:8px;bottom:8px;font-size:11px;color:var(--muted);background:rgba(255,255,255,.88);padding:3px 7px;border-radius:8px;z-index:3;pointer-events:none}
+.tip{position:absolute;z-index:5;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.14);padding:10px 12px;font-size:13px;line-height:1.4;max-width:270px;display:none}
+.tip .t{font-weight:700;margin-bottom:4px}
+.tip .row{display:flex;gap:6px;align-items:flex-start;margin-top:3px}
+.tip .x{position:absolute;right:6px;top:3px;border:0;background:none;font-size:18px;color:var(--muted);cursor:pointer}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;flex:0 0 10px;margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px}
+.timebar{display:flex;align-items:center;gap:10px}
+.timebar button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:15px;cursor:pointer;flex:0 0 40px}
+.timebar input{flex:1;accent-color:#1d2329;height:28px}
+.ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:2px 50px 0 50px}
+.yr{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.yr .big{font-size:18px;font-weight:700}
+.yr .km{font-size:13px;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 11px;font-size:13px;margin:0 6px 7px 0;cursor:pointer;color:var(--ink)}
+.chip.sel{border-color:#1d2329;box-shadow:inset 0 0 0 1px #1d2329;font-weight:600}
+.chip.small{font-size:12px;padding:5px 10px}
+.chip.on{background:#1d2329;color:#fff;border-color:#1d2329}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin-top:4px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 10px;font-size:13px;line-height:1.45}
+.kv div:nth-child(odd){color:var(--muted)}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.4;cursor:pointer}
+.tl li:last-child{border-bottom:0}
+.tl .d{flex:0 0 98px;font-weight:600}
+.tl .tag{font-size:11px;border-radius:6px;padding:1px 6px;margin-left:6px;white-space:nowrap}
+.tag.done{background:#e8f4ec;color:#1b6b39}.tag.now{background:#fde7f0;color:#a3245c}.tag.target{background:#e8effa;color:#1e4f96}.tag.pending{background:#f0eeea;color:#5f6b76}
+.note{font-size:12px;color:var(--muted);line-height:1.5}
+.note a{color:#1e4f96}
+.pill{font-size:11px;border-radius:6px;padding:1px 6px;background:#f0eeea;color:#5f6b76;white-space:nowrap}
+.grid2{display:grid;grid-template-columns:1fr;gap:10px}
+@media(max-width:600px){.zoom button{height:30px;min-width:36px;font-size:12px}.badge{font-size:11px}}
+@media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}.mapwrap{height:min(74vh,720px)}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Bengaluru Namma Metro — current &amp; future network</h1>
+  <div class="sub" style="margin-bottom:6px">By <a href="../" style="color:#1e4f96">Navdeep Singh Chander</a> · Updated 13 Nov 2026 · <b>Unofficial</b> — not affiliated with BMRCL. Check BMRCL announcements before planning travel.</div>
+  <div class="sub">Status as of <b>13 Nov 2026</b>. Line names and colours follow BMRCL usage; the Hosahalli–Kadabagere line has no confirmed colour (shown grey). Drag the timeline to see how the network grew and how it is planned to grow. Future dates are official targets, and past targets have often slipped.</div>
+</header>
+<main>
+  <div class="mapwrap" id="wrap">
+    <svg id="map" aria-label="Bengaluru metro map"></svg>
+    <div class="badge" id="badge"></div>
+    <div class="zoom">
+      <button id="zin" aria-label="Zoom in">+</button>
+      <button id="zout" aria-label="Zoom out">−</button>
+      <button id="fitCity">City</button>
+      <button id="fitRegion">Region</button>
+    </div>
+    <div class="hint">Pinch/drag to explore · tap a line or station</div>
+    <div class="tip" id="tip"><button class="x" id="tipx" aria-label="Close">×</button><div id="tipc"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="yr"><span class="big" id="ylabel"></span><span class="km" id="kmlabel"></span></div>
+    <div class="timebar">
+      <button id="play" aria-label="Play timeline">▶</button>
+      <input type="range" id="year" min="2011" max="2032" step="0.01">
+      <button id="today" aria-label="Back to today" style="font-size:11px;font-weight:600">Now</button>
+    </div>
+    <div class="ticks"><span>2011</span><span>2016</span><span>2021</span><span>2026</span><span>2032</span></div>
+  </div>
+
+  <div class="card">
+    <div id="chips"></div>
+    <div style="margin-top:2px">
+      <span class="chip small on" id="optPlanned">Planned lines</span>
+      <span class="chip small on" id="optP4">Phase 4 proposals</span>
+      <span class="chip small" id="optNames">All station names</span>
+    </div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div class="card" id="info"></div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Timeline</h2>
+      <ul class="tl" id="tl"></ul>
+      <div class="note" style="margin-top:6px">Tap a row to jump the map to that date.</div>
+    </div>
+    <div class="card">
+      <h2>How to read this map</h2>
+      <div class="note">
+        <p style="margin-top:0"><b>Accuracy.</b> Operational and under-construction stations are plotted at their approximate real positions (within a few hundred metres). For the Orange, Grey and Red lines and the Phase 4 proposals, only key stations are shown and the route is indicative, because final station lists and alignments are still being changed.</p>
+        <p><b>Background.</b> The map has no street tiles because this page cannot load external map images. Outer Ring Road, NICE Road (approximate), main lakes and parks are drawn for orientation.</p>
+        <p><b>Timeline.</b> Past dates are the dates public service started. Future dates are the latest official targets reported as of Nov 2026; "projected" lengths assume those targets are met. The km counter adds section lengths, adjusted so it matches the official totals (73.81 km in Oct 2023, 76.95 km in Nov 2024, 96.1 km in Aug 2025, 103.6 km from 14 Nov 2026). Future totals can differ by 1–2 km from official figures. Interchange stations are counted once.</p>
+        <p><b>Pink Line.</b> PM inauguration of the elevated section is scheduled for 13 Nov 2026 (about 12:45 PM) and public service starts at 6 am on 14 Nov 2026. The map's “Now” view counts it as open.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Sources</h2>
+    <div class="note" id="sources"></div>
+  </div>
+  <div class="note" style="text-align:center;margin-top:16px"><a href="../" style="color:#1e4f96">← Back to Navdeep Singh Chander's profile</a></div>
+</main>
+
+<script>
+(function(){
+"use strict";
+const TODAY=2026.87;
+const K=108.47,KY=110.57,LON0=77.6,LAT0=13.0;
+const prj=(lat,lon)=>[(lon-LON0)*K,(LAT0-lat)*KY];
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);if(attrs)for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function h(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+/* ---------------- LINES ---------------- */
+const LINES={
+ purple:{name:'Purple Line',short:'Purple',color:'#8B2F97',route:'Whitefield (Kadugodi) ↔ Challaghatta',len:'43.5 km',st:'37',
+  status:'Operational. Full line open since 9 Oct 2023.',when:'First section opened 20 Oct 2011',
+  ic:'Majestic (Green) · MG Road (Pink, 2027) · KR Puram / Krishnarajapura (Blue, 2027) · Sir M. Visvesvaraya / KR Circle (Red, proposed) · Mysuru Road (Orange, 2031) · Hosahalli (Grey, 2031)',
+  note:'East–West corridor. Challaghatta–Bidadi (~15.6 km) and KR Puram–Hoskote (~16 km) extensions are only proposals.'},
+ green:{name:'Green Line',short:'Green',color:'#18A04A',route:'Madavara ↔ Silk Institute',len:'≈33.5 km',st:'32',
+  status:'Operational. Last extension (Nagasandra–Madavara) opened 7 Nov 2024.',when:'First section opened 1 Mar 2014',
+  ic:'Majestic (Purple) · RV Road (Yellow) · JP Nagar (Orange, 2031) · Peenya (Orange, 2031)',
+  note:'North–South corridor. Madavara–Tumakuru (~59.9 km) and Silk Institute–Harohalli (~21.7 km) extensions are proposals only (not approved).'},
+ yellow:{name:'Yellow Line',short:'Yellow',color:'#E8B800',route:'Rashtreeya Vidyalaya (RV) Road ↔ Delta Electronics Bommasandra',len:'19.15 km',st:'16',
+  status:'Operational since 11 Aug 2025 (inaugurated 10 Aug 2025).',when:'Aug 2025',
+  ic:'RV Road (Green) · Jayadeva Hospital (Pink) · Central Silk Board (Blue, 2027)',
+  note:'Serves Electronic City along Hosur Road. Bommasandra–Attibele (~11 km) extension: feasibility study done, not approved.'},
+ pink:{name:'Pink Line',short:'Pink',color:'#E8458B',route:'Kalena Agrahara ↔ Nagawara',len:'21.25 km (sources also say 21.26 km)',st:'18 (6 elevated + 12 underground)',
+  status:'Elevated Kalena Agrahara–Tavarekere (7.5 km, 6 stations): CMRS safety clearance 28 Oct 2026; PM inauguration scheduled 13 Nov 2026 (~12:45 PM); public service from 14 Nov 2026. Underground Dairy Circle–Nagawara (13.76 km, 12 stations): trial runs planned from Nov 2026.',
+  when:'Underground section target: Mar 2027 (state minister) to May 2027 (BMRCL, as reported)',
+  ic:'Jayadeva Hospital (Yellow) · MG Road (Purple) · Nagawara (Blue) · JP Nagar 4th Phase (Orange) · Dairy Circle (Red, proposed)',
+  note:'Longest underground stretch in the network. Earlier deadlines (2020, Dec 2025, May 2026, Aug 2026) were missed.'},
+ blue:{name:'Blue Line (ORR–Airport)',short:'Blue',color:'#1F6FD1',route:'Central Silk Board ↔ Kempegowda Int\'l Airport',len:'58.19 km',st:'30 (13 in Phase 2A + 17 in Phase 2B)',
+  status:'Under construction. Mainline trial runs started in Nov 2026 (Baiyappanahalli depot → KR Puram → Doddanekundi).',
+  when:'Silk Board–KR Puram: mid-2027 (≈May 2027) · Hebbal–Airport: Sep 2027 · KR Puram–Hebbal: early 2028 · Full line: Mar 2028',
+  ic:'Central Silk Board (Yellow) · KR Puram / Krishnarajapura (Purple) · Nagawara (Pink) · Hebbal (Orange, Red) · Kempapura (Orange) · Ibbaluru (Red)',
+  note:'Section lengths 19.75 + 11 + 27.44 km as stated by the state government; other sources split it differently. Earlier targets of Jun 2026 and Dec 2026 for Silk Board–KR Puram slipped. Treat 2027–28 dates as targets, not commitments.'},
+ orange:{name:'Orange Line (Phase 3)',short:'Orange',color:'#F07C1B',route:'JP Nagar 4th Phase ↔ Kempapura (via ORR West and Hebbal)',len:'32.15 km',st:'22',
+  status:'Approved by Union Cabinet (Aug 2024). JICA loan signed Mar 2026. Land acquisition in progress; main civil work has not started.',
+  when:'Target May 2031 (original target 2029)',
+  ic:'JP Nagar 4th Phase (Pink) · Jaya Prakash Nagar (Green) · Mysuru Road (Purple) · Sumanahalli Cross (Grey) · Peenya (Green) · Hebbal (Blue, Red) · Kempapura (Blue)',
+  note:'Road design revised in Oct 2026 to about 10 km of double-decker (road + metro) plus flyovers, replacing the earlier 37 km double-decker plan. Civil tenders for the southern packages are at bidding stage. Route drawn here is indicative; only interchange stations shown (names as per the published station list).'},
+ grey:{name:'Grey Line (Phase 3)',short:'Grey',color:'#7D838B',route:'Hosahalli ↔ Kadabagere (Magadi Road)',len:'12.5 km',st:'9',
+  status:'Approved with Phase 3 (Aug 2024). Detailed design consultant appointed (Mar 2025); pre-construction.',when:'Target May 2031 (with Phase 3)',
+  ic:'Hosahalli (Purple) · Sumanahalli Cross (Orange)',note:'Colour not officially confirmed — called Grey Line in some sources and Silver Line in others. A Kadabagere–Tavarekere (Magadi Road) extension (~6.6 km) is at DPR stage. Route drawn here is indicative; only key stations shown.'},
+ red:{name:'Red Line (Phase 3A)',short:'Red',color:'#D42A2A',route:'Sarjapur ↔ Hebbal (via Koramangala, Dairy Circle, KR Circle)',len:'36.59 km in state-approved DPR (revised DPR ≈37.8 km); ≈14.45 km underground',st:'28 (17 elevated + 11 underground); one recent table shows 27',
+  status:'Approved by Karnataka cabinet (6 Dec 2024). Revised DPR is with the Union government; MoHUA has said it cannot give a timeline for approval.',
+  when:'No official date. About 5.5 years of construction after approval.',
+  ic:'Iblur (Blue) · Dairy Circle (Pink) · KR Circle (Purple) · Hebbal (Blue, Orange)',note:'Route drawn here is indicative; only key stations shown.'},
+ p4:{name:'Phase 4 proposals',short:'Phase 4',color:'#4E5A65',route:'Eight suburban extensions / new line',len:'≈215 km combined',st:'—',
+  status:'Proposals only (feasibility or DPR stage). None is finalised, approved or funded.',when:'No dates',ic:'—',
+  note:'Madavara–Tumakuru ~59.9 km (feasibility + DPR done) · Kalena Agrahara–Kadugodi Tree Park ~69 km via Jigani, Attibele, Sarjapur Road (feasibility in progress; branch to Anekal proposed) · Silk Institute–Harohalli ~21.7 km · KR Puram–Hoskote ~16 km via Budigere Cross · Challaghatta–Bidadi ~15.6 km · Doddajala–Devanahalli ~13.6 km · Bommasandra–Attibele ~11 km (feasibility done for these five) · Kadabagere–Tavarekere (Magadi Rd) ~6.6 km (DPR stage). The state is also backing RRTS corridors, which may replace some intercity metro proposals.'}
+};
+const ORDER=['purple','green','yellow','pink','blue','orange','grey','red','p4'];
+
+/* ---------------- SEGMENTS ----------------
+ status: op | uc (under construction) | ap (approved) | aw (awaiting approval) | pr (proposed)
+ open: decimal year service started; target: decimal year of official target (for projection)
+*/
+const S=[
+ {id:'pu1',line:'purple',name:'Baiyappanahalli – MG Road (Reach 1)',km:6.7,open:2011.80,dateL:'20 Oct 2011',status:'op',pts:[
+  ['Baiyappanahalli',12.9907,77.6525],['Swami Vivekananda Road',12.9859,77.6449],['Indiranagar',12.9783,77.6387],['Halasuru',12.9758,77.6265],['Trinity',12.9730,77.6170],['MG Road',12.9755,77.6067]]},
+ {id:'pu2',line:'purple',name:'Mysuru Road – Magadi Road (Reach 2)',km:6.4,open:2015.88,dateL:'16 Nov 2015',status:'op',pts:[
+  ['Magadi Road',12.9757,77.5552],['Hosahalli',12.9741,77.5456],['Vijayanagar',12.9709,77.5373],['Attiguppe',12.9619,77.5335],['Deepanjali Nagar',12.9520,77.5370],['Mysuru Road',12.9466,77.5301]]},
+ {id:'pu3',line:'purple',name:'MG Road – Magadi Road (underground)',km:5.12,open:2016.33,dateL:'30 Apr 2016',status:'op',pts:[
+  ['MG Road',12.9755,77.6067],['Cubbon Park',12.9810,77.5970],['Dr. B.R. Ambedkar (Vidhana Soudha)',12.9797,77.5927],['Sir M. Visvesvaraya (Central College)',12.9744,77.5839],['Majestic',12.9757,77.5728],['City Railway Station',12.9758,77.5663],['Magadi Road',12.9757,77.5552]]},
+ {id:'pu4',line:'purple',name:'Mysuru Road – Kengeri',km:7.5,open:2021.66,dateL:'30 Aug 2021',status:'op',pts:[
+  ['Mysuru Road',12.9466,77.5301],['Pantharapalya–Nayandahalli',12.9420,77.5212],['Rajarajeshwari Nagar',12.9365,77.5193],['Jnanabharathi',12.9354,77.5121],['Pattanagere',12.9246,77.4985],['Kengeri Bus Terminal',12.9170,77.4880],['Kengeri',12.9080,77.4766]]},
+ {id:'pu5',line:'purple',name:'KR Puram – Whitefield (Kadugodi)',km:13.71,open:2023.23,dateL:'26 Mar 2023',status:'op',pts:[
+  ['KR Puram',13.0001,77.6777],['Singayyanapalya',12.9963,77.6930],['Garudacharapalya',12.9935,77.7030],['Hoodi',12.9887,77.7114],['Seetharampalya',12.9809,77.7088],['Kundalahalli',12.9776,77.7158],['Nallurhalli',12.9765,77.7247],['Sri Sathya Sai Hospital',12.9811,77.7276],['Pattandur Agrahara',12.9877,77.7381],['Kadugodi Tree Park',12.9857,77.7469],['Hopefarm Channasandra',12.9873,77.7539],['Whitefield (Kadugodi)',12.9956,77.7579]]},
+ {id:'pu6',line:'purple',name:'Baiyappanahalli – KR Puram',km:2.1,open:2023.77,dateL:'9 Oct 2023',status:'op',pts:[
+  ['Baiyappanahalli',12.9907,77.6525],['Benniganahalli',12.9910,77.6630],['KR Puram',13.0001,77.6777]]},
+ {id:'pu7',line:'purple',name:'Kengeri – Challaghatta',km:2.05,open:2023.77,dateL:'9 Oct 2023',status:'op',pts:[
+  ['Kengeri',12.9080,77.4766],['Challaghatta',12.8977,77.4614]]},
+
+ {id:'gr1',line:'green',name:'Sampige Road – Peenya Industry',km:9.91,open:2014.16,dateL:'1 Mar 2014',status:'op',pts:[
+  ['Mantri Square Sampige Road',12.9908,77.5707],['Srirampura',12.9965,77.5634],['Mahakavi Kuvempu Road',12.9984,77.5569],['Rajajinagar',13.0005,77.5496],['Mahalakshmi',13.0081,77.5487],['Sandal Soap Factory',13.0147,77.5539],['Yeshwanthpur',13.0233,77.5500],['Goraguntepalya',13.0285,77.5409],['Peenya',13.0330,77.5333],['Peenya Industry',13.0364,77.5254]]},
+ {id:'gr2',line:'green',name:'Peenya Industry – Nagasandra',km:2.5,open:2015.33,dateL:'1 May 2015',status:'op',pts:[
+  ['Peenya Industry',13.0364,77.5254],['Jalahalli',13.0393,77.5196],['Dasarahalli',13.0436,77.5126],['Nagasandra',13.0480,77.5002]]},
+ {id:'gr3',line:'green',name:'Sampige Road – Yelachenahalli',km:11.62,open:2017.46,dateL:'18 Jun 2017',status:'op',pts:[
+  ['Mantri Square Sampige Road',12.9908,77.5707],['Majestic',12.9757,77.5728],['Chickpete',12.9668,77.5747],['KR Market',12.9608,77.5746],['National College',12.9505,77.5737],['Lalbagh',12.9465,77.5800],['South End Circle',12.9382,77.5800],['Jayanagar',12.9295,77.5801],['RV Road',12.9216,77.5802],['Banashankari',12.9152,77.5737],['JP Nagar',12.9073,77.5730],['Yelachenahalli',12.8961,77.5702]]},
+ {id:'gr4',line:'green',name:'Yelachenahalli – Silk Institute',km:6.29,open:2021.04,dateL:'15 Jan 2021',status:'op',pts:[
+  ['Yelachenahalli',12.8961,77.5702],['Konanakunte Cross',12.8890,77.5627],['Doddakallasandra',12.8846,77.5527],['Vajarahalli',12.8774,77.5444],['Thalaghattapura',12.8713,77.5386],['Silk Institute',12.8617,77.5300]]},
+ {id:'gr5',line:'green',name:'Nagasandra – Madavara',km:3.14,open:2024.85,dateL:'7 Nov 2024',status:'op',pts:[
+  ['Nagasandra',13.0480,77.5002],['Manjunathanagara',13.0503,77.4945],['Chikkabidarakallu',13.0524,77.4877],['Madavara',13.0573,77.4728]]},
+
+ {id:'ye1',line:'yellow',name:'RV Road – Bommasandra',km:19.15,open:2025.61,dateL:'11 Aug 2025',status:'op',pts:[
+  ['RV Road',12.9216,77.5802],['Ragigudda',12.9170,77.5875],['Jayadeva Hospital',12.9180,77.5995],['BTM Layout',12.9160,77.6105],['Central Silk Board',12.9176,77.6230],['Bommanahalli',12.9075,77.6265],['Hongasandra',12.8975,77.6305],['Kudlu Gate',12.8895,77.6385],['Singasandra',12.8810,77.6455],['Hosa Road',12.8735,77.6530],['Beratena Agrahara',12.8645,77.6600],['Electronic City',12.8505,77.6655],['Infosys Foundation Konappana Agrahara',12.8440,77.6720],['Huskur Road',12.8350,77.6800],['Biocon Hebbagodi',12.8250,77.6870],['Delta Electronics Bommasandra',12.8155,77.6940]]},
+
+ {id:'pk1',line:'pink',name:'Kalena Agrahara – Tavarekere (elevated)',km:7.5,open:2026.87,dateL:'14 Nov 2026 (public service; PM inauguration scheduled 13 Nov)',status:'op',pts:[
+  ['Kalena Agrahara',12.8780,77.5975],['Hulimavu',12.8870,77.5990],['IIMB',12.8955,77.6003],['JP Nagar 4th Phase',12.9050,77.6005],['Jayadeva Hospital',12.9180,77.5995],['Tavarekere',12.9265,77.6010]]},
+ {id:'pk2',line:'pink',name:'Dairy Circle – Nagawara (underground)',km:13.76,open:null,target:2027.3,dateL:'Mar–May 2027 (target)',status:'uc',pts:[
+  ['Tavarekere',12.9265,77.6010],['Dairy Circle',12.9370,77.6000],['Lakkasandra',12.9450,77.5990],['Langford Town',12.9550,77.6010],['Rashtriya Military School',12.9630,77.6040],['MG Road',12.9752,77.6075],['Shivajinagar',12.9857,77.6057],['Cantonment',12.9940,77.5995],['Pottery Town',13.0005,77.6110],['Tannery Road',13.0080,77.6180],['Venkateshpura',13.0170,77.6230],['Kadugundanahalli',13.0275,77.6230],['Nagawara',13.0400,77.6240]]},
+
+ {id:'bl1',line:'blue',name:'Central Silk Board – KR Puram (Phase 2A)',km:19.75,open:null,target:2027.4,dateL:'Mid-2027 (target ≈May 2027)',status:'uc',pts:[
+  ['Central Silk Board',12.9176,77.6230],['HSR Layout',12.9205,77.6395],['Agara',12.9240,77.6490],['Ibbaluru',12.9235,77.6610],['Bellandur',12.9310,77.6780],['Kadubeesanahalli',12.9385,77.6960],['Kodibeesanahalli',12.9480,77.6985],['Marathahalli',12.9565,77.7010],['ISRO',12.9655,77.7005],['Doddanekundi',12.9760,77.6965],['DRDO Sports Complex',12.9850,77.6935],['Saraswathi Nagar',12.9925,77.6895],['KR Puram',13.0001,77.6777]]},
+ {id:'bl2',line:'blue',name:'KR Puram – Hebbal (Phase 2B)',km:11,open:null,target:2028.1,dateL:'Early 2028 (target)',status:'uc',pts:[
+  ['KR Puram',13.0001,77.6777],['Kasturinagara',13.0050,77.6610],['Horamavu',13.0170,77.6555],['HRBR Layout',13.0215,77.6460],['Kalyan Nagar',13.0255,77.6395],['HBR Layout',13.0330,77.6315],['Nagawara',13.0400,77.6240],['Veerannapalya',13.0435,77.6135],['Kempapura',13.0470,77.6020],['Hebbal',13.0440,77.5910]]},
+ {id:'bl3',line:'blue',name:'Hebbal – Airport (Phase 2B)',km:27.44,open:null,target:2027.7,dateL:'Sep 2027 (target)',status:'uc',pts:[
+  ['Hebbal',13.0440,77.5910],['Kodigehalli',13.0590,77.5880],['Jakkur Cross',13.0760,77.5930],['Yelahanka',13.0990,77.5960],['Bagalur Cross',13.1350,77.6130],['Bettahalasuru',13.1600,77.6290],['Doddajala',13.1850,77.6600],['Airport City',13.2040,77.6880],['KIAL Terminals',13.1990,77.7068]]},
+
+ {id:'or1',line:'orange',name:'JP Nagar 4th Phase – Kempapura',km:32.15,open:null,target:2031.4,dateL:'May 2031 (target)',status:'ap',pts:[
+  ['JP Nagar 4th Phase',12.9050,77.6005],[null,12.9035,77.5880],['JP Nagar',12.9073,77.5730],[null,12.9160,77.5560],[null,12.9230,77.5465],[null,12.9300,77.5410],[null,12.9380,77.5350],['Mysuru Road',12.9466,77.5301],[null,12.9580,77.5130],[null,12.9720,77.5085],[null,12.9800,77.5100],['Sumanahalli Cross',12.9890,77.5115],[null,12.9980,77.5150],[null,13.0070,77.5200],[null,13.0180,77.5270],['Peenya',13.0330,77.5333],[null,13.0400,77.5480],[null,13.0440,77.5560],[null,13.0430,77.5720],['Hebbal',13.0440,77.5910],['Kempapura',13.0470,77.6020]]},
+ {id:'gy1',line:'grey',name:'Hosahalli – Kadabagere',km:12.5,open:null,target:2031.4,dateL:'May 2031 (target)',status:'ap',pts:[
+  ['Hosahalli',12.9741,77.5456],[null,12.9800,77.5350],[null,12.9860,77.5230],['Sumanahalli Cross',12.9890,77.5115],[null,12.9950,77.4900],[null,13.0040,77.4720],['Kadabagere',13.0190,77.4420]]},
+ {id:'rd1',line:'red',name:'Sarjapur – Hebbal',km:36.59,open:null,target:null,dateL:'Not fixed — awaiting Union approval',status:'aw',pts:[
+  ['Sarjapur',12.8600,77.7860],[null,12.8800,77.7560],[null,12.9000,77.7200],[null,12.9120,77.6950],[null,12.9190,77.6750],['Ibbaluru',12.9235,77.6610],[null,12.9300,77.6420],['Koramangala',12.9350,77.6250],[null,12.9365,77.6100],['Dairy Circle',12.9370,77.6000],[null,12.9450,77.5950],[null,12.9620,77.5940],['KR Circle',12.9744,77.5839],[null,12.9900,77.5850],[null,13.0140,77.5840],[null,13.0300,77.5880],['Hebbal',13.0440,77.5910]]},
+
+ {id:'x1',line:'p4',name:'Madavara – Tumakuru (feasibility + DPR done)',km:59.9,open:null,target:null,dateL:'Proposal — no date',status:'pr',pts:[
+  ['Madavara',13.0573,77.4728],[null,13.0750,77.4300],['Nelamangala',13.0980,77.3930],[null,13.1600,77.3300],[null,13.2500,77.2600],['Tumakuru',13.3392,77.1013]]},
+ {id:'x2',line:'p4',name:'Challaghatta – Bidadi (feasibility done)',km:15.6,open:null,target:null,dateL:'Proposal — no date',status:'pr',pts:[
+  ['Challaghatta',12.8977,77.4614],[null,12.8600,77.4300],['Bidadi',12.7970,77.3840]]},
+ {id:'x3',line:'p4',name:'Silk Institute – Harohalli (feasibility done)',km:21.7,open:null,target:null,dateL:'Proposal — no date',status:'pr',pts:[
+  ['Silk Institute',12.8617,77.5300],[null,12.8000,77.5100],[null,12.7400,77.4900],['Harohalli',12.6820,77.4740]]},
+ {id:'x4',line:'p4',name:'Bommasandra – Attibele (feasibility done)',km:11,open:null,target:null,dateL:'Proposal — no date',status:'pr',pts:[
+  ['Delta Electronics Bommasandra',12.8155,77.6940],[null,12.8000,77.7200],['Attibele',12.7790,77.7720]]},
+ {id:'x5',line:'p4',name:'KR Puram – Hoskote (feasibility done)',km:16,open:null,target:null,dateL:'Proposal — no date',status:'pr',pts:[
+  ['KR Puram',13.0001,77.6777],[null,13.0150,77.7100],['Budigere Cross',13.0400,77.7400],[null,13.0550,77.7700],['Hoskote',13.0700,77.7980]]},
+ {id:'x6',line:'p4',name:'Kalena Agrahara – Kadugodi Tree Park (feasibility in progress)',km:69,open:null,target:null,dateL:'Proposal — no date',status:'pr',pts:[
+  ['Kalena Agrahara',12.8780,77.5975],['Bannerghatta',12.8000,77.5770],['Jigani',12.7840,77.6380],['Attibele',12.7790,77.7720],['Sarjapur',12.8600,77.7860],['Dommasandra',12.8800,77.7560],['Varthur Kodi',12.9530,77.7360],['Kadugodi Tree Park',12.9857,77.7469]]},
+ {id:'x7',line:'p4',name:'Doddajala – Devanahalli (feasibility done)',km:13.6,open:null,target:null,dateL:'Proposal — no date',status:'pr',pts:[
+  ['Doddajala',13.1850,77.6600],[null,13.2150,77.6850],['Devanahalli',13.2470,77.7120]]},
+ {id:'x8',line:'p4',name:'Kadabagere – Tavarekere, Magadi Rd (DPR stage)',km:6.6,open:null,target:null,dateL:'Proposal — no date',status:'pr',pts:[
+  ['Kadabagere',13.0190,77.4420],[null,13.0080,77.4130],['Tavarekere (Magadi Rd)',12.9960,77.3880]]}
+];
+const SEGI={};S.forEach(s=>SEGI[s.id]=s);
+const ALT={'Majestic':'Official: Nadaprabhu Kempegowda Station, Majestic','City Railway Station':'Official: Krantivira Sangolli Rayanna Railway Station','Hosahalli':'Official: Sri Balagangadharanatha Swamiji Station, Hosahalli','RV Road':'Official: Rashtreeya Vidyalaya Road','JP Nagar':'Official: Jaya Prakash Nagar','KR Market':'Official: Krishna Rajendra Market','KR Puram':'Official: Krishnarajapura','Tavarekere':'Also called Swagath Cross','Kalena Agrahara':'Formerly Gottigere','Rashtriya Military School':'Also listed as National Military School','Cantonment':'Cantonment Railway Station','Hebbal':'Also spelt Hebbala','DRDO Sports Complex':'Listed as Bagmane Developers – DRDO Sports Complex','Kadugundanahalli':'Also spelt Kadugondanahalli','Tavarekere (Magadi Rd)':'Village on Magadi Road — not the Pink Line station'};
+const STLABEL={op:'Operational',uc:'Under construction',ap:'Approved',aw:'Awaiting approval',pr:'Proposed'};
+const FUTURE_LINES={orange:1,grey:1,red:1,p4:1};
+const TERMINALS=new Set(['Whitefield (Kadugodi)','Challaghatta','Madavara','Silk Institute','Delta Electronics Bommasandra','Kalena Agrahara','Nagawara','KIAL Terminals','Kadabagere','Sarjapur','Tumakuru','Bidadi','Harohalli','Attibele','Hoskote','Devanahalli','Tavarekere (Magadi Rd)','Tavarekere','Central Silk Board','Kempapura','Hebbal','RV Road','JP Nagar 4th Phase']);
+
+/* ---------------- GEO CONTEXT ---------------- */
+const LAKES=[[12.9365,77.6640,2.2,0.9],[12.9430,77.7380,1.0,0.55],[13.0455,77.5830,0.55,0.45],[12.9830,77.6205,0.5,0.4],[12.9090,77.6155,0.6,0.45],[12.9220,77.6430,0.4,0.3],[13.0400,77.5680,0.35,0.3],[13.0960,77.5870,0.7,0.5]];
+const PARKS=[[12.9763,77.5929,0.85,0.6],[12.9507,77.5848,0.6,0.55],[12.8000,77.5770,2.6,2.0]];
+const ORR=[[12.9176,77.6230],[12.9225,77.6450],[12.9235,77.6600],[12.9290,77.6790],[12.9420,77.6975],[12.9560,77.7015],[12.9760,77.6975],[12.9985,77.6700],[13.0120,77.6600],[13.0300,77.6350],[13.0410,77.6230],[13.0440,77.5910],[13.0430,77.5600],[13.0285,77.5409],[13.0120,77.5280],[12.9890,77.5120],[12.9610,77.5110],[12.9466,77.5301],[12.9300,77.5410],[12.9160,77.5560],[12.9073,77.5730],[12.9100,77.5880],[12.9180,77.5995],[12.9160,77.6105],[12.9176,77.6230]];
+const NICE=[[13.0560,77.4700],[13.0200,77.4580],[12.9900,77.4560],[12.9500,77.4680],[12.9150,77.4800],[12.8850,77.5050],[12.8700,77.5300],[12.8650,77.5650],[12.8680,77.5960],[12.8550,77.6300],[12.8420,77.6600]];
+const LOCS=[['Whitefield',12.9700,77.7520],['Electronic City',12.8440,77.6480],['Yelahanka',13.1050,77.5780],['Kengeri',12.9050,77.4950],['Peenya',13.0420,77.5330],['Koramangala',12.9300,77.6250],['Jayanagar',12.9280,77.5650],['Hebbal',13.0560,77.5960],['Marathahalli',12.9560,77.7150],['Kempegowda Int\'l Airport',13.2150,77.7100],['Nelamangala',13.1100,77.3930],['Hoskote',13.0820,77.7980],['Bidadi',12.7850,77.3840],['Harohalli',12.6700,77.4740],['Attibele',12.7660,77.7720],['Sarjapur',12.8480,77.7860],['Tumakuru',13.3500,77.1013],['Bannerghatta NP',12.7800,77.5770],['Majestic',12.9690,77.5600]];
+
+/* ---------------- SVG BUILD ---------------- */
+const svg=document.getElementById('map');
+const wrap=document.getElementById('wrap');
+const root=el('g',null,svg);
+const gGeo=el('g',null,root),gLines=el('g',null,root),gHit=el('g',null,root),gSt=el('g',null,root),gStHit=el('g',null,root),gLab=el('g',null,root);
+const pathD=a=>'M'+a.map(p=>{const q=prj(p[0],p[1]);return q[0].toFixed(3)+','+q[1].toFixed(3);}).join('L');
+
+const geoEls=[];
+PARKS.forEach(p=>{const c=prj(p[0],p[1]);el('ellipse',{cx:c[0],cy:c[1],rx:p[3],ry:p[2]*0.8,fill:'#e4efdc'},gGeo);});
+LAKES.forEach(p=>{const c=prj(p[0],p[1]);el('ellipse',{cx:c[0],cy:c[1],rx:p[2],ry:p[3],fill:'#d3e6f2'},gGeo);});
+const orrP=el('path',{d:pathD(ORR),fill:'none',stroke:'#dcd6cc','stroke-linejoin':'round'},gGeo);geoEls.push([orrP,4,null]);
+const niceP=el('path',{d:pathD(NICE),fill:'none',stroke:'#e2dccf','stroke-linejoin':'round'},gGeo);geoEls.push([niceP,3,[8,5]]);
+// airport marker
+const kia=prj(13.1986,77.7066);
+const kiaM=el('rect',{x:kia[0]-0.9,y:kia[1]-0.6,width:1.8,height:1.2,rx:0.3,fill:'#eceae5',stroke:'#c9c4ba','stroke-width':0.08},gGeo);
+
+S.forEach(seg=>{
+  const d=pathD(seg.pts.map(p=>[p[1],p[2]]));
+  if(seg.line==='yellow') seg.casing=el('path',{d,fill:'none',stroke:'#9a7a00','stroke-linejoin':'round','stroke-linecap':'round'},gLines);
+  seg.path=el('path',{d,fill:'none',stroke:LINES[seg.line].color,'stroke-linejoin':'round','stroke-linecap':'round'},gLines);
+  seg.hit=el('path',{d,fill:'none',stroke:'#000','stroke-opacity':0,'stroke-linecap':'round','pointer-events':'stroke','data-seg':seg.id},gHit);
+});
+
+// stations
+const ST=[],stKey={};
+S.forEach(seg=>{seg.pts.forEach(p=>{if(!p[0])return;const k=seg.line+'|'+p[0];let s=stKey[k];
+  if(!s){s={name:p[0],line:seg.line,xy:prj(p[1],p[2]),segs:[]};stKey[k]=s;ST.push(s);} s.segs.push(seg);});});
+const GR=[];
+ST.forEach(s=>{let g=GR.find(g=>Math.hypot(g.xy[0]-s.xy[0],g.xy[1]-s.xy[1])<0.3);
+  if(!g){g={xy:s.xy.slice(),members:[],name:s.name};GR.push(g);} g.members.push(s);s.group=g;});
+GR.forEach((g,i)=>{
+  g.i=i;g.lines=[...new Set(g.members.map(m=>m.line))];
+  g.isX=g.lines.length>1;
+  g.term=g.members.some(m=>TERMINALS.has(m.name));
+  g.dot=el('circle',{cx:g.xy[0],cy:g.xy[1],fill:'#fff'},gSt);
+  g.hit=el('circle',{cx:g.xy[0],cy:g.xy[1],fill:'#000','fill-opacity':0,'data-g':i},gStHit);
+  g.lab=el('text',{'font-family':'-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif',fill:'#1d2329',stroke:'#fff','stroke-linejoin':'round','paint-order':'stroke','pointer-events':'none'},gLab);
+  g.lab.textContent=g.name;
+});
+const locEls=LOCS.map(l=>{const c=prj(l[1],l[2]);const t=el('text',{x:c[0],y:c[1],'text-anchor':'middle','font-style':'italic','font-family':'-apple-system,Segoe UI,Roboto,Arial,sans-serif',fill:'#8d9298',stroke:'#fbfaf7','paint-order':'stroke','pointer-events':'none'},gGeo);t.textContent=l[0];return {t,xy:c,name:l[0]};});
+const roadLabs=[].map(l=>{const c=prj(l[1],l[2]);const t=el('text',{x:c[0],y:c[1],'text-anchor':'middle','font-family':'-apple-system,Segoe UI,Roboto,Arial,sans-serif',fill:'#a39b8c',stroke:'#fbfaf7','paint-order':'stroke','pointer-events':'none','letter-spacing':'0.04em'},gGeo);t.textContent=l[0];return {t,xy:c};});
+
+/* ---------------- STATE ---------------- */
+let s=10,tx=0,ty=0,year=TODAY,selLine=null;
+const opt={planned:true,p4:true,names:false};
+const STY={op:{w:6,dash:null,o:1},proj:{w:5.5,dash:null,o:.5},uc:{w:5,dash:[9,6],o:.95},ap:{w:4.5,dash:[5,5],o:.9},aw:{w:4,dash:[0.1,7],o:.95},pr:{w:3,dash:[0.1,6],o:.85},fut:{w:3.5,dash:[4,6],o:.2}};
+function segState(seg,Y){
+  if(seg.open!=null&&seg.open<=Y+1e-6)return 'op';
+  if(Y<TODAY-0.01)return 'fut';
+  if(seg.target!=null&&seg.target<=Y+1e-6)return 'proj';
+  return seg.status;
+}
+
+/* ---------------- RENDER ---------------- */
+const mctx=document.createElement('canvas').getContext('2d');
+function tw(txt,px,bold){mctx.font=(bold?'600 ':'')+px+'px -apple-system,Segoe UI,Roboto,Arial,sans-serif';return mctx.measureText(txt).width;}
+
+function applyState(){
+  const Y=year;
+  S.forEach(seg=>{
+    const st=segState(seg,Y);seg.st=st;
+    let show=true;
+    if(st!=='op'&&st!=='proj'&&!opt.planned)show=false;
+    if(seg.line==='p4'&&!opt.p4)show=false;
+    seg.show=show;
+    const dim=selLine&&selLine!==seg.line;
+    const o=STY[st].o*(dim?0.18:1);
+    [seg.path,seg.casing].forEach(p=>{if(!p)return;p.style.display=show?'':'none';p.setAttribute('opacity',o);});
+    seg.hit.style.display=show?'':'none';
+  });
+  GR.forEach(g=>{
+    const segs=[];g.members.forEach(m=>m.segs.forEach(sg=>{if(sg.show)segs.push(sg);}));
+    g.show=segs.length>0;
+    g.live=segs.some(sg=>sg.st==='op'||sg.st==='proj');
+    const past=year<TODAY-0.01;
+    const showLines=new Set(segs.filter(sg=>!past||sg.st==='op').map(sg=>sg.line));
+    g.past=past;
+    g.xNow=showLines.size>1;
+    g.mainLine=segs.length?segs[0].line:g.lines[0];
+    const dim=selLine&&!showLines.has(selLine);
+    g.dim=dim;
+    [g.dot,g.hit].forEach(e=>e.style.display=g.show?'':'none');
+    g.dot.setAttribute('opacity',dim?0.2:(g.live?1:(past?0.25:0.85)));
+  });
+  sizes();counters();
+}
+
+function sizes(){
+  root.setAttribute('transform','translate('+tx+','+ty+') scale('+s+')');
+  const k=1/s;
+  S.forEach(seg=>{
+    const sty=STY[seg.st];const w=sty.w*(s<6?0.75:1);
+    seg.path.setAttribute('stroke-width',w*k);
+    seg.path.setAttribute('stroke-dasharray',sty.dash?sty.dash.map(v=>v*k).join(' '):'none');
+    if(seg.casing){seg.casing.setAttribute('stroke-width',(w+2)*k);seg.casing.setAttribute('stroke-dasharray',sty.dash?sty.dash.map(v=>v*k).join(' '):'none');}
+    seg.hit.setAttribute('stroke-width',18*k);
+  });
+  geoEls.forEach(([e,w,d])=>{e.setAttribute('stroke-width',w*k);e.setAttribute('stroke-dasharray',d?d.map(v=>v*k).join(' '):'none');});
+  const small=s<14;
+  GR.forEach(g=>{
+    let r,sw,stroke;
+    if(g.xNow){r=(small?4.2:5.5);sw=2;stroke='#1d2329';}
+    else{r=(small?2.4:3.4);sw=1.7;stroke=LINES[g.mainLine].color;if(g.mainLine==='yellow')stroke='#9a7a00';}
+    g.dot.setAttribute('r',r*k);g.dot.setAttribute('stroke',stroke);g.dot.setAttribute('stroke-width',sw*k);
+    g.dot.setAttribute('fill',g.live||g.xNow?'#fff':'#f7f6f3');
+    g.hit.setAttribute('r',Math.max(r+6,11)*k);
+  });
+  layoutLabels();
+}
+
+function layoutLabels(){
+  const k=1/s;const placed=[];
+  const fits=b=>{for(const p of placed){if(b[0]<p[2]&&b[2]>p[0]&&b[1]<p[3]&&b[3]>p[1])return false;}return true;};
+  // reserve dots of visible interchanges
+  GR.forEach(g=>{if(g.show&&g.xNow){const x=g.xy[0]*s,y=g.xy[1]*s;placed.push([x-5,y-5,x+5,y+5]);}});
+  const allNames=opt.names||s>=26;
+  const cand=GR.filter(g=>g.show&&!g.dim&&(!g.past||g.live)).map(g=>{
+    const pr=(g.xNow?3:0)+(g.term?2:0)+(g.live?1:0);
+    return {g,pr};
+  }).filter(c=>allNames||(s>=7.5&&c.pr>=3)||(s>=13&&c.pr>=2)||(s<7.5&&c.g.xNow&&c.g.term))
+    .sort((a,b)=>b.pr-a.pr);
+  GR.forEach(g=>g.lab.style.display='none');
+  const fs=(s<9?10:11);
+  cand.forEach(({g})=>{
+    const bold=g.xNow;const w=tw(g.name,fs,bold);const hgt=fs+2;
+    const x=g.xy[0]*s,y=g.xy[1]*s;const off=g.xNow?8:6;
+    const opts=[[x+off,y-hgt/2,'start'],[x-off-w,y-hgt/2,'end'],[x-w/2,y-off-hgt,'middle'],[x-w/2,y+off,'middle']];
+    for(const [bx,by,anc] of opts){
+      const b=[bx-1,by-1,bx+w+1,by+hgt+1];
+      if(fits(b)){placed.push(b);
+        const ax=anc==='start'?bx:anc==='end'?bx+w:bx+w/2;
+        g.lab.setAttribute('x',ax*k);g.lab.setAttribute('y',(by+hgt-3)*k);
+        g.lab.setAttribute('text-anchor',anc);g.lab.setAttribute('font-size',fs*k);
+        g.lab.setAttribute('font-weight',bold?'600':'400');g.lab.setAttribute('stroke-width',3*k);
+        g.lab.style.display='';break;}
+    }
+  });
+  // locality labels (lowest priority)
+  const showLoc=s<30;
+  locEls.forEach(l=>{
+    if(!showLoc){l.t.style.display='none';return;}
+    const fs2=10.5;const w=tw(l.name,fs2,false);const x=l.xy[0]*s,y=l.xy[1]*s;
+    const b=[x-w/2-1,y-fs2,x+w/2+1,y+3];
+    if(fits(b)){placed.push(b);l.t.style.display='';l.t.setAttribute('font-size',fs2*k);l.t.setAttribute('stroke-width',3*k);}
+    else l.t.style.display='none';
+  });
+  roadLabs.forEach(l=>{l.t.setAttribute('font-size',9.5*k);l.t.setAttribute('stroke-width',3*k);l.t.style.display=s>=7?'':'none';});
+}
+
+let raf=0;
+function setT(zoomed){
+  if(zoomed){if(!raf)raf=requestAnimationFrame(()=>{raf=0;sizes();});}
+  else root.setAttribute('transform','translate('+tx+','+ty+') scale('+s+')');
+  hideTip();
+}
+const clamp=v=>Math.max(1.6,Math.min(140,v));
+function zoomAt(px,py,f){const ns=clamp(s*f);const wx=(px-tx)/s,wy=(py-ty)/s;s=ns;tx=px-wx*s;ty=py-wy*s;setT(true);}
+const CITY=[12.81,13.215,77.45,77.80],REGION=[12.66,13.36,77.08,77.83];
+function fit(b){const r=svg.getBoundingClientRect();const a=prj(b[1],b[2]),c=prj(b[0],b[3]);const pad=18;
+  s=clamp(Math.min((r.width-2*pad)/(c[0]-a[0]),(r.height-2*pad)/(c[1]-a[1])));
+  tx=(r.width-(a[0]+c[0])*s)/2;ty=(r.height-(a[1]+c[1])*s)/2;sizes();hideTip();}
+
+/* ---------------- INTERACTION ---------------- */
+const ptrs=new Map();let down=null,moved=false,pinch=null;
+svg.addEventListener('pointerdown',e=>{
+  try{svg.setPointerCapture(e.pointerId);}catch(_){}
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ptrs.size===1){down={x:e.clientX,y:e.clientY,t:e.target,tx,ty};moved=false;}
+  else if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y)||1,s,tx,ty,cx:(a.x+b.x)/2,cy:(a.y+b.y)/2};moved=true;}
+});
+svg.addEventListener('pointermove',e=>{
+  if(!ptrs.has(e.pointerId))return;
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ptrs.size===1&&down){const dx=e.clientX-down.x,dy=e.clientY-down.y;
+    if(Math.abs(dx)+Math.abs(dy)>6)moved=true;
+    if(moved){tx=down.tx+dx;ty=down.ty+dy;setT(false);}}
+  else if(ptrs.size===2&&pinch){const [a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);
+    const cx=(a.x+b.x)/2,cy=(a.y+b.y)/2;const r=svg.getBoundingClientRect();
+    const wx=(pinch.cx-r.left-pinch.tx)/pinch.s,wy=(pinch.cy-r.top-pinch.ty)/pinch.s;
+    s=clamp(pinch.s*d/pinch.d);tx=(cx-r.left)-wx*s;ty=(cy-r.top)-wy*s;setT(true);}
+});
+function up(e){
+  if(!ptrs.has(e.pointerId))return;ptrs.delete(e.pointerId);
+  if(ptrs.size<2)pinch=null;
+  if(ptrs.size===0){if(down&&!moved)tap(down.t,down.x,down.y);down=null;}
+  else if(ptrs.size===1){const p=[...ptrs.values()][0];down={x:p.x,y:p.y,t:null,tx,ty};moved=true;}
+}
+svg.addEventListener('pointerup',up);svg.addEventListener('pointercancel',up);
+svg.addEventListener('wheel',e=>{e.preventDefault();const r=svg.getBoundingClientRect();zoomAt(e.clientX-r.left,e.clientY-r.top,Math.exp(-e.deltaY*0.0015));},{passive:false});
+document.getElementById('zin').onclick=()=>{const r=svg.getBoundingClientRect();zoomAt(r.width/2,r.height/2,1.5);};
+document.getElementById('zout').onclick=()=>{const r=svg.getBoundingClientRect();zoomAt(r.width/2,r.height/2,1/1.5);};
+document.getElementById('fitCity').onclick=()=>fit(CITY);
+document.getElementById('fitRegion').onclick=()=>fit(REGION);
+
+const tip=document.getElementById('tip'),tipc=document.getElementById('tipc');
+document.getElementById('tipx').onclick=hideTip;
+function hideTip(){tip.style.display='none';}
+function showTipAt(html,x,y){
+  tipc.innerHTML=html;tip.style.display='block';
+  const W=wrap.clientWidth,H=wrap.clientHeight,tw_=tip.offsetWidth,th=tip.offsetHeight;
+  let L=x+12,T=y+12;if(L+tw_>W-8)L=Math.max(8,x-tw_-12);if(T+th>H-8)T=Math.max(8,y-th-12);
+  tip.style.left=L+'px';tip.style.top=T+'px';
+}
+function segWhen(seg){
+  if(seg.open!=null)return (seg.open<=TODAY+1e-6?'Open since ':'Opens ')+seg.dateL;
+  return seg.dateL;
+}
+function tap(t,cx,cy){
+  const r=wrap.getBoundingClientRect();const x=cx-r.left,y=cy-r.top;
+  const ds=t&&t.dataset?t.dataset:{};
+  if(ds.g!=null){showStation(GR[+ds.g],x,y);}
+  else if(ds.seg){const seg=SEGI[ds.seg];
+    showTipAt('<div class="t"><span class="dot" style="background:'+LINES[seg.line].color+';margin-right:6px"></span>'+h(LINES[seg.line].name)+'</div>'+
+      '<div>'+h(seg.name)+' · '+seg.km+' km</div><div style="margin-top:3px"><span class="pill">'+STLABEL[seg.status==='op'&&seg.open>TODAY?'uc':seg.status]+'</span> '+h(segWhen(seg))+'</div>'+
+      '<div class="note" style="margin-top:5px">Line details shown below the map.</div>',x,y);
+    selectLine(seg.line,true);}
+  else hideTip();
+}
+function showStation(g,x,y){
+  const names=[...new Set(g.members.map(m=>m.name))];
+  let html='<div class="t">'+h(names.join(' / '))+'</div>';
+  const alts=[...new Set(names.map(n=>ALT[n]).filter(Boolean))];
+  if(alts.length)html+='<div class="note">'+h(alts.join(' · '))+'</div>';
+  g.members.forEach(m=>{
+    const segs=m.segs.slice().sort((a,b)=>(a.open??9999)-(b.open??9999));
+    const sg=segs[0];
+    const fut=FUTURE_LINES[m.line]?' <span class="pill">indicative</span>':'';
+    html+='<div class="row"><span class="dot" style="background:'+LINES[m.line].color+'"></span><span><b>'+h(LINES[m.line].short)+'</b> — '+h(segWhen(sg))+fut+'</span></div>';
+  });
+  if(g.lines.length>1)html+='<div class="note" style="margin-top:5px">Interchange station</div>';
+  showTipAt(html,x,y);
+}
+
+/* ---------------- CONTROLS ---------------- */
+const yIn=document.getElementById('year');yIn.value=TODAY;
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtY(Y){if(Math.abs(Y-TODAY)<0.03)return 'Now · from 14 Nov 2026';const yr=Math.floor(Y);const m=Math.min(11,Math.floor((Y-yr)*12+1e-6));return MON[m]+' '+yr;}
+function counters(){
+  let op=0,proj=0;const opSt=new Set();
+  S.forEach(seg=>{const st=segState(seg,year);if(st==='op'){op+=seg.km;}if(st==='proj')proj+=seg.km;});
+  GR.forEach(g=>{if(g.members.some(m=>m.segs.some(sg=>segState(sg,year)==='op')))opSt.add(g.i);});
+  // Purple section lengths (as published) add up to 43.58 km vs the official 43.49 km line length; correct once Purple is complete
+  if(year>=2023.77-1e-6)op-=0.09;
+  document.getElementById('ylabel').textContent=fmtY(year);
+  let t=op.toFixed(1)+' km open · '+opSt.size+' stations';
+  if(proj>0)t+=' · +'+proj.toFixed(1)+' km projected (if targets are met)';
+  if(op===0)t='Before the first line opened (Oct 2011)';
+  document.getElementById('kmlabel').textContent=t;
+  document.getElementById('badge').innerHTML='<b>'+fmtY(year)+'</b><br>'+(op>0?op.toFixed(1)+' km open':'No metro yet')+(proj>0?'<br>+'+proj.toFixed(1)+' km projected':'');
+}
+yIn.addEventListener('input',()=>{year=Math.round(+yIn.value*100)/100;stopPlay();applyState();hideTip();});
+let playT=null;const playB=document.getElementById('play');
+function stopPlay(){if(playT){clearInterval(playT);playT=null;playB.textContent='▶';}}
+playB.onclick=()=>{if(playT){stopPlay();return;}
+  if(year>=2031.9)year=2011;playB.textContent='❚❚';
+  playT=setInterval(()=>{year=Math.min(2032,year+0.07);yIn.value=year;applyState();if(year>=2032)stopPlay();},60);};
+document.getElementById('today').onclick=()=>{stopPlay();year=TODAY;yIn.value=TODAY;applyState();};
+
+const chips=document.getElementById('chips');
+ORDER.forEach(id=>{const L=LINES[id];const c=document.createElement('span');c.className='chip';c.dataset.line=id;
+  c.innerHTML='<span class="dot" style="margin-top:0;background:'+L.color+'"></span>'+h(L.short);
+  c.onclick=()=>selectLine(selLine===id?null:id);chips.appendChild(c);});
+function selectLine(id,keepTip){
+  selLine=id;[...chips.children].forEach(c=>c.classList.toggle('sel',c.dataset.line===id));
+  if(id==='p4'&&!opt.p4)toggleOpt('p4');
+  if(id&&FUTURE_LINES[id]&&id!=='p4'&&!opt.planned)toggleOpt('planned');
+  if(id&&!keepTip)hideTip();
+  applyState();renderInfo();
+}
+function toggleOpt(k){opt[k]=!opt[k];document.getElementById({planned:'optPlanned',p4:'optP4',names:'optNames'}[k]).classList.toggle('on',opt[k]);}
+document.getElementById('optPlanned').onclick=()=>{toggleOpt('planned');applyState();};
+document.getElementById('optP4').onclick=()=>{toggleOpt('p4');applyState();};
+document.getElementById('optNames').onclick=()=>{toggleOpt('names');sizes();};
+
+// legend
+(function(){
+  const items=[['Operational','op'],['Projected open (future years)','proj'],['Under construction','uc'],['Approved','ap'],['Awaiting approval','aw'],['Proposed','pr']];
+  let html='';
+  items.forEach(([lab,k])=>{const st=STY[k];
+    html+='<span><svg width="34" height="10"><line x1="3" y1="5" x2="31" y2="5" stroke="#1d2329" stroke-width="'+(st.w*0.7)+'" stroke-linecap="round" opacity="'+st.o+'" '+(st.dash?'stroke-dasharray="'+st.dash.map(v=>v*0.8).join(' ')+'"':'')+'/></svg>'+lab+'</span>';});
+  html+='<span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#fff" stroke="#1d2329" stroke-width="2"/></svg>Interchange</span>';
+  html+='<span><svg width="34" height="10"><line x1="3" y1="5" x2="31" y2="5" stroke="#dcd6cc" stroke-width="4"/></svg>Outer Ring Road</span>';
+  html+='<span><svg width="34" height="10"><line x1="3" y1="5" x2="31" y2="5" stroke="#e2dccf" stroke-width="3" stroke-dasharray="7 4"/></svg>NICE Road (approx.)</span>';
+  document.getElementById('legend').innerHTML=html;
+})();
+
+/* ---------------- INFO PANEL ---------------- */
+const OVER=[
+ ['purple','43.5 km','37','Operational','Full line Oct 2023'],
+ ['green','≈33.5 km','32','Operational','Full line Nov 2024'],
+ ['yellow','19.15 km','16','Operational','Aug 2025'],
+ ['pink','21.25 km','18','Elevated opens 14 Nov 2026','Underground Mar–May 2027 (target)'],
+ ['blue','58.19 km','30','Under construction; trials started','Mid-2027 → Mar 2028 (in stages)'],
+ ['orange','32.15 km','22','Approved','May 2031'],
+ ['grey','12.5 km','9','Approved','May 2031'],
+ ['red','36.59–37.8 km','28','Awaiting Union approval','Not fixed'],
+ ['p4','≈215 km (8 corridors)','—','Proposed','Not fixed']
+];
+function renderInfo(){
+  const box=document.getElementById('info');
+  if(!selLine){
+    let r='<h2>All lines at a glance</h2><div class="tablewrap"><table><tr><th>Line</th><th>Length</th><th>Stations</th><th>Status</th><th>Opening</th></tr>';
+    OVER.forEach(o=>{const L=LINES[o[0]];r+='<tr style="cursor:pointer" data-l="'+o[0]+'"><td><span class="dot" style="margin:0 6px 0 0;background:'+L.color+'"></span>'+h(L.short)+'</td><td>'+o[1]+'</td><td>'+o[2]+'</td><td>'+o[3]+'</td><td>'+o[4]+'</td></tr>';});
+    r+='</table></div><div class="note" style="margin-top:6px">Open from 14 Nov 2026: 103.6 km, 88 stations. Approved network (Phases 1–3): about 222 km. Tap a line (here, on the chips or on the map) for details.</div>';
+    box.innerHTML=r;
+    box.querySelectorAll('tr[data-l]').forEach(tr=>tr.onclick=()=>selectLine(tr.dataset.l));
+    return;
+  }
+  const L=LINES[selLine];
+  let r='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h2 style="margin:0"><span class="dot" style="margin:0 8px 0 0;width:12px;height:12px;background:'+L.color+'"></span>'+h(L.name)+'</h2><span class="chip small" id="clr" style="margin:0">All lines</span></div>';
+  r+='<div class="kv" style="margin-top:10px"><div>Route</div><div>'+h(L.route)+'</div><div>Length</div><div>'+h(L.len)+'</div><div>Stations</div><div>'+h(L.st)+'</div><div>Status</div><div>'+h(L.status)+'</div><div>Dates</div><div>'+h(L.when)+'</div><div>Interchanges</div><div>'+h(L.ic)+'</div><div>Notes</div><div>'+h(L.note)+'</div></div>';
+  const segs=S.filter(x=>x.line===selLine);
+  r+='<div class="tablewrap" style="margin-top:10px"><table><tr><th>Section</th><th>km</th><th>Status</th><th>Date</th></tr>';
+  segs.forEach(x=>{const st=x.status==='op'&&x.open>TODAY?'uc':x.status;r+='<tr><td>'+h(x.name)+'</td><td>'+x.km+'</td><td>'+STLABEL[st]+'</td><td>'+h(x.dateL)+'</td></tr>';});
+  r+='</table></div>';
+  box.innerHTML=r;document.getElementById('clr').onclick=()=>selectLine(null);
+}
+
+/* ---------------- TIMELINE ---------------- */
+const MS=[
+ [2011.80,'20 Oct 2011','purple','First metro: Baiyappanahalli – MG Road (6.7 km)','done'],
+ [2014.16,'1 Mar 2014','green','Sampige Road – Peenya Industry','done'],
+ [2015.33,'1 May 2015','green','Peenya Industry – Nagasandra','done'],
+ [2015.88,'16 Nov 2015','purple','Mysuru Road – Magadi Road','done'],
+ [2016.33,'30 Apr 2016','purple','Underground MG Road – Magadi Road; East–West line complete','done'],
+ [2017.46,'18 Jun 2017','green','Sampige Road – Yelachenahalli; Phase 1 complete (≈42 km)','done'],
+ [2021.04,'15 Jan 2021','green','Yelachenahalli – Silk Institute','done'],
+ [2021.66,'30 Aug 2021','purple','Mysuru Road – Kengeri','done'],
+ [2023.23,'26 Mar 2023','purple','KR Puram – Whitefield (Kadugodi)','done'],
+ [2023.77,'9 Oct 2023','purple','Baiyappanahalli – KR Puram and Kengeri – Challaghatta; Purple Line complete (43.5 km)','done'],
+ [2024.85,'7 Nov 2024','green','Nagasandra – Madavara; Green Line complete','done'],
+ [2025.61,'11 Aug 2025','yellow','Yellow Line RV Road – Bommasandra (19.15 km); network ≈96 km','done'],
+ [2026.87,'14 Nov 2026','pink','Pink Line elevated Kalena Agrahara – Tavarekere (7.5 km, 6 stations) opens to public; PM inauguration scheduled 13 Nov. Network 103.6 km','now'],
+ [2027.3,'Mar–May 2027','pink','Pink Line underground Dairy Circle – Nagawara (13.76 km, 12 stations)','target'],
+ [2027.4,'Mid-2027','blue','Blue Line Central Silk Board – KR Puram (19.75 km)','target'],
+ [2027.7,'Sep 2027','blue','Blue Line Hebbal – Airport (27.44 km)','target'],
+ [2028.1,'Early 2028','blue','Blue Line KR Puram – Hebbal (11 km); full Blue Line by Mar 2028','target'],
+ [2031.4,'May 2031','orange','Phase 3: Orange (32.15 km) and Grey (12.5 km) lines; approved network ≈222 km','target'],
+ [null,'Not fixed','red','Phase 3A Red Line Sarjapur – Hebbal — awaiting Union approval','pending'],
+ [null,'Not fixed','p4','Phase 4: 8 suburban corridors (~215 km) — feasibility / DPR stage','pending']
+];
+const TAG={done:'Opened',now:'Opening now',target:'Target',pending:'Pending'};
+const tl=document.getElementById('tl');
+MS.forEach(m=>{const li=document.createElement('li');
+  li.innerHTML='<span class="d">'+h(m[1])+'</span><span class="dot" style="background:'+LINES[m[2]].color+'"></span><span>'+h(m[3])+' <span class="tag '+m[4]+'">'+TAG[m[4]]+'</span></span>';
+  li.onclick=()=>{stopPlay();if(m[0]!=null){year=m[0];yIn.value=year;}selectLine(m[2]);wrap.scrollIntoView({behavior:'smooth',block:'start'});};
+  tl.appendChild(li);});
+
+/* ---------------- SOURCES ---------------- */
+const SRC=[
+ ['Construction World — PM to inaugurate Pink Line on 13 Nov; network to 103.6 km','https://www.constructionworld.in/transport-infrastructure/metro-rail-and-railways-infrastructure/pm-modi-to-inaugurate-bengaluru-pink-line-on-13-november/100022'],
+ ['The Open Press — Pink Line opens; public service from 14 Nov 2026','https://theopenpress.in/article/bengaluru-metro-pink-line-opens-7-5-km-kalena-agrahara-tavarekere-stretch'],
+ ['TalkingLands — CMRS clearance for Pink elevated, 28 Oct 2026','https://www.talkinglands.com/blogs/pink-line-metro-bangalore-property'],
+ ['Deccan Herald — Pink underground to be commissioned by Mar 2027','https://www.deccanherald.com/india/karnataka/bengaluru/krishna-byre-gowda-blames-mismanaged-metro-sites-for-bengalurus-visual-disfigurement-4045540'],
+ ['Swarajya — Pink underground & Blue ORR trials in Nov, open by May 2027','https://swarajyamag.com/news-brief/bengaluru-metro-eyes-november-trials-on-pink-line-underground-and-orr-corridor-both-set-to-open-by-may-2027'],
+ ['The Shillong Times (IANS) — Blue Line trial runs begin, 11 Nov 2026','https://theshillongtimes.com/2026/11/11/bengaluru-blue-line-metro-begins-trial-runs-to-boost-airport-connectivity/'],
+ ['Swarajya — Blue Line: Phase 2A mid-2027, full corridor Mar 2028','https://swarajyamag.com/news-brief/blue-line-metro-trial-operations-move-closer-to-mainline-testing-with-runs-from-byappanahalli-to-kr-puram'],
+ ['NativePlanet — Blue Line section-wise targets (Hebbal–Airport Sep 2027, KR Puram–Hebbal early 2028)','https://www.nativeplanet.com/news/bengaluru-metro-update-2026-blue-line-deadlines-pink-line-opening-orr-traffic-011-23813.html'],
+ ['Square Yards — Blue Line route, phases and interchanges','https://www.squareyards.com/blog/namma-metro-blue-line-route-stations-real-estate-impact'],
+ ['Swarajya — Phase 3 land acquisition; commissioning target May 2031 (3 Nov 2026)','https://swarajyamag.com/news-brief/bengaluru-metro-phase-3-land-acquisition-process-continues-with-third-notification-covering-170-properties'],
+ ['Deccan Herald — Centre clears Phase 3 (Orange & Hosahalli–Kadabagere lines)','https://www.deccanherald.com/india/karnataka/bengaluru/centre-clears-bengaluru-metros-phase-3-jica-likely-to-fund-it-deadline-2029-3153634'],
+ ['PropNewsTime — Orange Line revised to ~10 km double-decker plus flyovers','https://propnewstime.com/latestnewsstories/MzgwNjM=/bengaluru-orange-line-to-get-targeted-flyovers-underpass-at-key-traffic-bottlenecks'],
+ ['Deccan Herald — Phase 3A (Red Line) stations and interchanges','https://www.deccanherald.com/india/karnataka/bengaluru/hebbal-sarjapur-metro-line-okayed-by-finance-dept-3265258'],
+ ['OneIndia — Red Line still awaits Centre\'s nod','https://www.oneindia.com/bengaluru/namma-metro-red-line-still-awaits-centres-nod-despite-revised-dpr-8160445.html'],
+ ['India TV — Pink Line inauguration today ~12:45 PM; public from 14 Nov','https://www.indiatvnews.com/karnataka/pm-modi-to-inaugurate-bengaluru-metro-pink-line-stretch-today-check-routes-fares-details-2026-11-13-1059321'],
+ ['Deccan Herald — six Pink elevated stations (BMRCL)','https://www.deccanherald.com/india/karnataka/bengaluru/will-pink-line-really-open-by-may-2026-namma-metro-says-no-3785341'],
+ ['Deccan Herald — Blue Line section targets and lengths (19.75 / 11 / 27.44 km)','https://www.deccanherald.com/amp/story/india%2Fkarnataka%2Fbengaluru%2Fd-k-shivakumar-warns-namma-metros-blue-line-contractors-says-no-new-work-if-deadlines-slip-3821677'],
+ ['Wikipedia — Namma Metro section opening dates, lengths and station counts (compiled from BMRCL)','https://en.wikipedia.org/wiki/Namma_Metro'],
+ ['Wikipedia — Orange Line station list and interchanges','https://en.wikipedia.org/wiki/Orange_Line_(Namma_Metro)'],
+ ['Metro Rail Today — Red Line: 36.59 km, 28 stations (17 elevated, 11 underground)','https://metrorailtoday.com/news/bangalores-3659-km-hebbal-to-sarjaur-line-awaits-central-govt-nod-amid-double-decker-concerns'],
+ ['Construction World — Six Namma Metro extensions planned','https://www.constructionworld.in/transport-infrastructure/metro-rail-and-railways-infrastructure/six-namma-metro-lines-planned-for-extension/98096'],
+ ['OneIndia — Phase 4: 8 corridors, 215-km plan (27 Oct 2026)','https://www.oneindia.com/bengaluru/bengaluru-metro-phase-4-215-km-network-plan-areas-to-get-connectivity-inner-ring-metro-left-out-8243403.html'],
+ ['Deccan Herald — RRTS plan may replace some intercity metro proposals','https://www.deccanherald.com/amp/story/india/karnataka/bengaluru/centre-set-to-approve-bengaluru-namma-metro-phase-3-with-double-decker-4034977']
+];
+document.getElementById('sources').innerHTML='<ol style="padding-left:18px;margin:0">'+SRC.map(x=>'<li style="margin-bottom:4px"><a href="'+x[1]+'" target="_blank" rel="noopener">'+h(x[0])+'</a></li>').join('')+'</ol><p style="margin-bottom:0">This is an independent, unofficial compilation from public reports and is not affiliated with or endorsed by BMRCL. Historical opening dates and station lists for operational lines are from BMRCL records as widely reported. Compiled 13 Nov 2026.</p>';
+
+/* ---------------- INIT ---------------- */
+renderInfo();
+applyState();
+fit(CITY);
+let rz=0;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>fit(CITY),150);});
+})();
+</script>
+</body>
+</html>
